@@ -1,0 +1,26 @@
+# Build outputs
+bin/
+obj/
+
+# IDE/editor files
+.vs/
+.vscode/
+*.user
+*.rsuser
+*.suo
+
+# Local configuration
+appsettings.Development.json
+appsettings.*.local.json
+appsettings.Local.json
+
+# Environment variables
+.env
+.env.*
+
+# NuGet
+*.nupkg
+packages/
+
+# Test results
+TestResults/
