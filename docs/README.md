@@ -4,7 +4,7 @@ Smart notification bot with C#, AI, Telegram and Google Calendar
 
 --- 
 
-## 📌 About the project
+### 📌 About the project
 
 RoutineAI is an automated assistant the checks calendar events and sends personalized messages to the user via Telegram, helping with routine organization, productivity and consistency in tasks
 
@@ -18,7 +18,7 @@ The goal of the project is to explore concepts such as:
  
 ---
 
-## 🚀 Technologies used
+### 🚀 Technologies used
 - .NET 9 (Worker Service)
 - C#
 - OpenAI
@@ -28,7 +28,7 @@ The goal of the project is to explore concepts such as:
 
 ---
 
-## 🧠 Objective
+### 🧠 Objective
 
 This project was created with a focus especially on::
 - Techinical growth in C#
@@ -37,7 +37,7 @@ This project was created with a focus especially on::
 
 ---
 
-## Next steps
+### Next steps
 - [ ] Integration with Telegram
 - [ ] Integration with Google Calendar
 - [ ] AI-powered message generation
@@ -45,6 +45,6 @@ This project was created with a focus especially on::
 
 ---
 
-## Project Flowchart
+### Project Flowchart
 
 ![Fluxograma](diagrams/project-flowchart.svg)
