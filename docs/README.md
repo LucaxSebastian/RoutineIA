@@ -38,7 +38,7 @@ This project was created with a focus especially on::
 ---
 
 ### Next steps
-- [ ] Integration with Telegram
+- [x] Integration with Telegram
 - [ ] Integration with Google Calendar
 - [ ] AI-powered message generation
 - [ ] Deployment with Docker
