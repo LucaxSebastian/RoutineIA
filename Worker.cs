@@ -26,27 +26,43 @@ public class Worker(ILogger<Worker> logger,  IServiceScopeFactory scopeFactory) 
             var aiService = createScope.ServiceProvider.GetRequiredService<IAIService>();
             var notificationService = createScope.ServiceProvider.GetRequiredService<INotificationService>();
             var reminderService = createScope.ServiceProvider.GetRequiredService<IReminderService>();
+            var tracker = createScope.ServiceProvider.GetRequiredService<INotificationTracker>();
 
-            _logger.LogInformation("🔄 Iniciando ciclo do RoutineAI...");
+            _logger.LogInformation("Iniciando ciclo do RoutineAI...");
 
             var upcomingEvent = await reminderService.GetUpcomingEventAsync();
 
             if (upcomingEvent is null)
             {
-                _logger.LogInformation("⏳ Nenhum evento próximo encontrado");
+                _logger.LogInformation("Nenhum evento próximo encontrado");
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
                 continue;
             }
 
-            _logger.LogInformation("⏰ Evento próximo encontrado: {Title}", upcomingEvent.Title);
+            var eventId = upcomingEvent.Id.ToString();
 
-            var message = await aiService.GenerateMessageAsync();
+            var alreadyNotified = tracker.WasEventNotified(eventId);
 
-            _logger.LogInformation("🤖 Mensagem gerada: {Message}", message);
+            _logger.LogInformation("Evento {Id} já foi notificado? {Result}", eventId, alreadyNotified);
+
+            if (alreadyNotified)
+            {
+                _logger.LogInformation("Igorando evento '{Title}' pois ele já foi notificado", upcomingEvent.Title);
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                continue;
+            }
+
+            _logger.LogInformation("Evento próximo encontrado: {Title}", upcomingEvent.Title);
+
+            var message = await aiService.GenerateMessageAsync(upcomingEvent);
+
+            _logger.LogInformation("Mensagem gerada: {Message}", message);
 
             await notificationService.SendMessageAsync(message);
 
-            _logger.LogInformation("⏱️ Aguardando próxima execução...");
+            tracker.MarkEventAsNotified(eventId);
+
+            _logger.LogInformation("Aguardando próxima execução...");
 
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
