@@ -47,4 +47,4 @@ This project was created with a focus especially on::
 
 ### Project Flowchart
 
-![Fluxograma](diagrams/project-flowchart.svg)
+![Fluxograma](architecture/project-flowchart.svg)
