@@ -10,7 +10,7 @@ namespace RoutineAI.Infrastructure.Services
     /// <summary>
     /// Verifica se um evento já foi notificado para evitar notificações duplicadas.
     /// </summary>
-    public class InMemoryNotificationTracker : INotificationTracker
+    public class InMemoryNotificationTracker : INotificationTrackerService
     {
         private readonly HashSet<string> _notifiedEvents = [];
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RoutineAI.Application.Interfaces;
 
-public interface INotificationTracker
+public interface INotificationTrackerService
 {
     bool WasEventNotified(string eventId);
     void MarkEventAsNotified(string eventId);

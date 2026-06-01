@@ -26,7 +26,7 @@ public class Worker(ILogger<Worker> logger,  IServiceScopeFactory scopeFactory) 
             var aiService = createScope.ServiceProvider.GetRequiredService<IAIService>();
             var notificationService = createScope.ServiceProvider.GetRequiredService<INotificationService>();
             var reminderService = createScope.ServiceProvider.GetRequiredService<IReminderService>();
-            var tracker = createScope.ServiceProvider.GetRequiredService<INotificationTracker>();
+            var tracker = createScope.ServiceProvider.GetRequiredService<INotificationTrackerService>();
 
             _logger.LogInformation("Iniciando ciclo do RoutineAI...");
 

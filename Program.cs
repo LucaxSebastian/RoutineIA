@@ -13,7 +13,7 @@ builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IReminderService, ReminderService>();
 
-builder.Services.AddSingleton<INotificationTracker, InMemoryNotificationTracker>();
+builder.Services.AddSingleton<INotificationTrackerService, InMemoryNotificationTracker>();
 builder.Services.AddSingleton<ITelegramBotClient>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<TelegramSettings>>().Value;
