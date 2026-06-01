@@ -1,11 +1,18 @@
 using RoutineAI.Application.Interfaces;
+using System.Linq;
 
 namespace RoutineAI;
 
-public class Worker(
-    ILogger<Worker> logger, 
-    IServiceScopeFactory scopeFactory
-    ) : BackgroundService
+/// <summary>
+/// Responsabilidades:
+///     - Orquestar o ReminderService para buscar o próximo evento elegível
+///     - Orquestar o AIService para gerar mensagem
+///     - Orquestar o NotificationService para enviar mensagem
+///     - Controla o ciclo de execução da aplicação
+/// </summary>
+/// <param name="logger"></param>
+/// <param name="scopeFactory"></param>
+public class Worker(ILogger<Worker> logger,  IServiceScopeFactory scopeFactory) : BackgroundService
 {
     private readonly ILogger<Worker> _logger = logger;
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
@@ -16,37 +23,26 @@ public class Worker(
         {
             using var createScope = _scopeFactory.CreateScope();
 
-            var calendarService = createScope.ServiceProvider.GetRequiredService<ICalendarService>();
             var aiService = createScope.ServiceProvider.GetRequiredService<IAIService>();
             var notificationService = createScope.ServiceProvider.GetRequiredService<INotificationService>();
+            var reminderService = createScope.ServiceProvider.GetRequiredService<IReminderService>();
 
             _logger.LogInformation("🔄 Iniciando ciclo do RoutineAI...");
 
-            var hasEvent = await calendarService.HasEventTodayAsync();
+            var upcomingEvent = await reminderService.GetUpcomingEventAsync();
 
-            if (!hasEvent)
+            if (upcomingEvent is null)
             {
-                _logger.LogInformation("❌ Nenhum evento encontrado!");
+                _logger.LogInformation("⏳ Nenhum evento próximo encontrado");
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
                 continue;
             }
 
-            _logger.LogInformation("✅ Evento encontrado");
-
-            var isWithinOneHour = await calendarService.IsEventWithinOneHourAsync();
-
-            if (!isWithinOneHour)
-            {
-                _logger.LogInformation("⏳ O evento ainda não está próximo");
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
-                continue;
-            }
-
-            _logger.LogInformation("⏰ O evento em até 1 hora!");
+            _logger.LogInformation("⏰ Evento próximo encontrado: {Title}", upcomingEvent.Title);
 
             var message = await aiService.GenerateMessageAsync();
 
-            _logger.LogInformation("🤖 Mensagem gerada: {message}", message);
+            _logger.LogInformation("🤖 Mensagem gerada: {Message}", message);
 
             await notificationService.SendMessageAsync(message);
 

@@ -11,6 +11,7 @@ builder.Services.AddHostedService<Worker>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
 
 builder.Services.AddSingleton<ITelegramBotClient>(sp =>
 {
